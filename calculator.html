@@ -92,9 +92,20 @@
 
                 if (value === '=') {
                     try {
-                        display.value = eval(display.value.replace('sqrt', 'Math.sqrt').replace('log', 'Math.log').replace('exp', 'Math.exp').replace('sin', 'Math.sin').replace('cos', 'Math.cos').replace('tan', 'Math.tan'));
+                        // Evaluate the expression with correct function replacements
+                        const result = eval(display.value
+                            .replace(/sqrt/g, 'Math.sqrt')
+                            .replace(/log/g, 'Math.log')
+                            .replace(/exp/g, 'Math.exp')
+                            .replace(/sin/g, 'Math.sin')
+                            .replace(/cos/g, 'Math.cos')
+                            .replace(/tan/g, 'Math.tan')
+                            .replace(/(\d+(\.\d+)?)\s*(?=sin|cos|tan)/g, '$1 * (Math.PI / 180)') // Convert degrees to radians
+                        );
+                        display.value = Number.isFinite(result) ? result : 'Error';
                     } catch (e) {
                         alert('Invalid Input');
+                        display.value = '';
                     }
                 } else if (value === 'C') {
                     display.value = '';
